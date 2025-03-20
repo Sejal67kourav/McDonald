@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>McDonald's Virtual Ordering</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffeaa7;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #d35400;
+        }
+        .menu {
+            background: white;
+            display: inline-block;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px gray;
+            margin-bottom: 20px;
+        }
+        .order-btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background-color: #e74c3c;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .order-btn:hover {
+            background-color: #c0392b;
+        }
+        .order-status {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #2d3436;
+        }
+        .order-container {
+            display: none;
+            position: relative;
+            text-align: center;
+        }
+        .order-id {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background: #ff4757;
+            color: white;
+            padding: 5px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .food-image img {
+            width: 250px;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>🍔 Welcome to McDonald's Virtual Ordering 🍟</h2>
+
+    <div class="menu">
+        <h3>Select Your Food:</h3>
+        <label><input type="checkbox" value="Burger"> 🍔 Burger</label><br>
+        <label><input type="checkbox" value="Fries"> 🍟 Fries</label><br>
+        <label><input type="checkbox" value="Pizza"> 🍕 Pizza</label><br>
+        <label><input type="checkbox" value="Pasta"> 🍝 Pasta</label><br>
+        <label><input type="checkbox" value="Ice Cream"> 🍦 Ice Cream</label><br>
+        <br>
+        <button class="order-btn" onclick="placeOrder()">Order Food</button>
+    </div>
+
+    <div class="order-status" id="orderStatus">Waiting for an order...</div>
+
+    <div class="order-container" id="orderContainer">
+        <div class="order-id" id="orderId"></div>
+        <div class="food-image" id="foodImage"></div>
+    </div>
+
+    <script>
+        function placeOrder() {
+            let selectedItems = document.querySelectorAll("input[type='checkbox']:checked");
+            let orderItems = Array.from(selectedItems).map(item => item.value);
+
+            if (orderItems.length === 0) {
+                alert("Please select at least one item to order!");
+                return;
+            }
+
+            document.getElementById("orderStatus").innerHTML = "⏳ Preparing your food...";
+            document.getElementById("orderContainer").style.display = "none";
+
+            // Simulating order preparation time (random 2 to 5 seconds)
+            let preparationTime = Math.floor(Math.random() * 3000) + 2000; 
+
+            new Promise((resolve) => {
+                setTimeout(() => resolve(orderItems), preparationTime);
+            }).then((items) => {
+                let orderId = Math.floor(Math.random() * 1000) + 1;
+                document.getElementById("orderId").innerText = "Order #" + orderId;
+
+                let imageMap = {
+                    "Burger": "https://media.istockphoto.com/id/471456061/photo/hamburger.webp?a=1&b=1&s=612x612&w=0&k=20&c=QpEd_yDiElU0uKD9VUxry4hL0ZIrUFqG3lwrgNmFnOA=",
+                    "Fries": "https://media.istockphoto.com/id/502893771/photo/french-fries-12.webp?a=1&b=1&s=612x612&w=0&k=20&c=ignUcTaqDWXIIuTy-7krHi5zAAR49vDzN1JxFCoX2wk=",
+                    "Pizza": "https://media.istockphoto.com/id/187248625/photo/pepperoni-pizza.webp?a=1&b=1&s=612x612&w=0&k=20&c=clncU414Y_vfH-OoUqiwy5AnZRwBpeSehVqJkD9SvKU=",
+                    "Pasta": "https://media.istockphoto.com/id/1189709277/photo/pasta-penne-with-roasted-tomato-sauce-mozzarella-cheese-grey-stone-background-top-view.webp?a=1&b=1&s=612x612&w=0&k=20&c=UAhg7-sf7qMOUDz7J_t_UvA4lol56xk6sPDeCWMVymk=",
+                    "Ice Cream":"https://media.istockphoto.com/id/157472912/photo/ice-cream-composition-on-a-bowl.webp?a=1&b=1&s=612x612&w=0&k=20&c=e1yPCusQJl2scx955yuv9LUcbx5e7OcARC_VgEDdz5Y="
+                };
+                let imagesHtml = items.map(item => `<img src="${imageMap[item]}" alt="${item}">`).join("");
+                document.getElementById("foodImage").innerHTML = imagesHtml;
+
+                document.getElementById("orderStatus").innerHTML = "✅ Your order is ready!";
+                document.getElementById("orderContainer").style.display = "block";
+            });
+        }
+    </script>
+</body>
+</html>
